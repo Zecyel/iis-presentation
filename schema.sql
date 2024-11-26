@@ -7,5 +7,6 @@ CREATE TABLE users (
 CREATE TABLE products (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
-    price REAL NOT NULL
+    price REAL NOT NULL,
+    url TEXT NOT NULL
 );
