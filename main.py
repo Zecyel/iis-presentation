@@ -30,6 +30,37 @@ def login():
     else:
         return 'Invalid credentials'
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        conn = get_db_connection()
+        conn.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
+        conn.commit()
+        conn.close()
+        return redirect(url_for('index'))
+    return render_template_string('''
+        <form action="/register" method="post">
+            Username: <input type="text" name="username"><br>
+            Password: <input type="password" name="password"><br>
+            <input type="submit" value="Register">
+        </form>
+    ''')
+
+@app.route('/users')
+def users():
+    conn = get_db_connection()
+    users = conn.execute('SELECT * FROM users').fetchall()
+    conn.close()
+    
+    user_list = '<ul>'
+    for user in users:
+        user_list += f'<li>{user["username"]}</li>'
+    user_list += '</ul>'
+    
+    return user_list
+
 @app.route('/search')
 def search():
     query = request.args.get('query')
